@@ -3,6 +3,7 @@ pragma solidity =0.8.17;
 
 import "./interfaces/IRouter.sol";
 import "../core/interfaces/IFactory.sol";
+import "./libraries/DEXLibrary.sol";
 
 contract Router is IRouter {
     address public immutable factoryAddr;
@@ -32,6 +33,12 @@ contract Router is IRouter {
     ) internal returns (uint256 amountA, uint256 amountB) {
         if (IFactory(factoryAddr).getTradingPair(tokenA, tokenB) == address(0)) {
             IFactory(factoryAddr).createTradingPair(tokenA, tokenB);
+        }
+
+        (uint256 reserveA, uint256 reserveB) = DEXLibrary.getReserves(factoryAddr, tokenA, tokenB);
+
+        if (reserveA == 0 && reserveB == 0) {
+            (amountA, amountB) = (amountADesired, amountBDesired);
         }
     }
 }

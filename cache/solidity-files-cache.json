@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Volumes/extreme/Projects/Solidity/Defi-Bootcamp/contracts/periphery/Router.sol": {
-      "lastModificationDate": 1715566756940,
-      "contentHash": "3740eaa872539e91a046927d41e294da",
+      "lastModificationDate": 1715663697773,
+      "contentHash": "96350881a4b7a843c024db9bb8bf7e68",
       "sourceName": "contracts/periphery/Router.sol",
       "solcConfig": {
         "version": "0.8.17",
@@ -29,7 +29,9 @@
         }
       },
       "imports": [
-        "./interfaces/IRouter.sol"
+        "./interfaces/IRouter.sol",
+        "../core/interfaces/IFactory.sol",
+        "./libraries/DEXLibrary.sol"
       ],
       "versionPragmas": [
         "=0.8.17"
@@ -71,6 +73,190 @@
       ],
       "artifacts": [
         "IRouter"
+      ]
+    },
+    "/Volumes/extreme/Projects/Solidity/Defi-Bootcamp/contracts/core/Factory.sol": {
+      "lastModificationDate": 1715606929228,
+      "contentHash": "b1e1af1537c60b486bc3e7448a3613ae",
+      "sourceName": "contracts/core/Factory.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./interfaces/IFactory.sol",
+        "./TradingPairExchange.sol",
+        "./interfaces/ITradingPairExchange.sol"
+      ],
+      "versionPragmas": [
+        "=0.8.17"
+      ],
+      "artifacts": [
+        "Factory"
+      ]
+    },
+    "/Volumes/extreme/Projects/Solidity/Defi-Bootcamp/contracts/core/interfaces/IFactory.sol": {
+      "lastModificationDate": 1715597120473,
+      "contentHash": "6802d0804feadda260a77eafecf67343",
+      "sourceName": "contracts/core/interfaces/IFactory.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "=0.8.17"
+      ],
+      "artifacts": [
+        "IFactory"
+      ]
+    },
+    "/Volumes/extreme/Projects/Solidity/Defi-Bootcamp/contracts/core/TradingPairExchange.sol": {
+      "lastModificationDate": 1715663535497,
+      "contentHash": "a190708540e1adf32cd2416c3c6ef229",
+      "sourceName": "contracts/core/TradingPairExchange.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./interfaces/ITradingPairExchange.sol"
+      ],
+      "versionPragmas": [
+        "=0.8.17"
+      ],
+      "artifacts": [
+        "TradingPairExchange"
+      ]
+    },
+    "/Volumes/extreme/Projects/Solidity/Defi-Bootcamp/contracts/core/interfaces/ITradingPairExchange.sol": {
+      "lastModificationDate": 1715663563323,
+      "contentHash": "990260a17cb4e49e314b06d6d9eda0fb",
+      "sourceName": "contracts/core/interfaces/ITradingPairExchange.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "=0.8.17"
+      ],
+      "artifacts": [
+        "ITradingPairExchange"
+      ]
+    },
+    "/Volumes/extreme/Projects/Solidity/Defi-Bootcamp/contracts/periphery/libraries/DEXLibrary.sol": {
+      "lastModificationDate": 1715663850685,
+      "contentHash": "e1e0cc639c9863775eca9f510b3685ce",
+      "sourceName": "contracts/periphery/libraries/DEXLibrary.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../../core/interfaces/ITradingPairExchange.sol",
+        "../../core/TradingPairExchange.sol"
+      ],
+      "versionPragmas": [
+        "=0.8.17"
+      ],
+      "artifacts": [
+        "DEXLibrary"
       ]
     }
   }

@@ -20,4 +20,10 @@ contract TradingPairExchange is ITradingPairExchange {
         tokenA = _tokenA;
         tokenB = _tokenB;
     }
+
+    /// uint112 - 1 storage slot is 256 bits (32 bytes), so the reserve0 and reserve1 variables are packed into a single storage slot
+    function getReserves() external view returns (uint112 _reserve0, uint112 _reserve1) {
+        _reserve0 = reserve0;
+        _reserve1 = reserve1;
+    }
 }
