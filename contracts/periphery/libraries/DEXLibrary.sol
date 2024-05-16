@@ -3,6 +3,7 @@ pragma solidity =0.8.17;
 
 import "../../core/interfaces/ITradingPairExchange.sol";
 import "../../core/TradingPairExchange.sol";
+import "hardhat/console.sol";
 
 library DEXLibrary {
     function sortTokens(address tokenA, address tokenB) internal pure returns (address token0, address token1) {
@@ -29,7 +30,20 @@ library DEXLibrary {
         returns (uint256 reserveA, uint256 reserveB)
     {
         (address token0,) = sortTokens(tokenA, tokenB);
-        (uint256 reserve0, uint256 reserve1) = ITradingPairExchange(pairFor(factory, tokenA, tokenB)).getReserves();
+        (uint256 reserve0, uint256 reserve1,) = ITradingPairExchange(pairFor(factory, tokenA, tokenB)).getReserves();
         (reserveA, reserveB) = tokenA == token0 ? (reserve0, reserve1) : (reserve1, reserve0);
+    }
+
+    function quote(uint256 amountA, uint256 reserveA, uint256 reserveB) internal view returns (uint256 amountB) {
+        require(amountA > 0, "DEXLibrary: INSUFFICIENT_AMOUNT");
+        require(reserveA > 0 && reserveB > 0, "DEXLibrary: INSUFFICIENT_LIQUIDITY");
+        amountB = (amountA * reserveB) / reserveA;
+        console.log("---------------------------------");
+        console.log("---- amountA ----", amountA);
+        console.log("---- reserveB ----", reserveB);
+        console.log("---- reserveA ----", reserveA);
+        console.log("---- (amountA * reserveB) ----", (amountA * reserveB));
+        console.log("---- amountB ----", amountB);
+        console.log("---------------------------------");
     }
 }

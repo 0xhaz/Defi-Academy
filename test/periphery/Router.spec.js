@@ -13,7 +13,7 @@ describe("Router contract", () => {
     const amountAMin = ethers.utils.parseUnits("0.99", 18); // 0.99 AAVE (1% slippage)
     const amountBMin = ethers.utils.parseUnits("55.44", 18); // 55.44 DAI (1% slippage)
 
-    const [deployer] = await ethers.getSigners();
+    const [deployer, liquidityProvider] = await ethers.getSigners();
 
     const FactoryContract = await ethers.getContractFactory("Factory");
     const factory = await FactoryContract.deploy(deployer.address);
@@ -31,6 +31,7 @@ describe("Router contract", () => {
       amountAMin,
       amountBMin,
       router,
+      liquidityProvider,
     };
   }
 
@@ -77,6 +78,7 @@ describe("Router contract", () => {
           amountAMin,
           amountBMin,
           router,
+          liquidityProvider,
         } = await loadFixture(deployRouterFixture);
 
         await router.callStatic.depositLiquidity(
@@ -85,17 +87,32 @@ describe("Router contract", () => {
           amountADesired,
           amountBDesired,
           amountAMin,
-          amountBMin
+          amountBMin,
+          liquidityProvider.address
         );
+
+        const faultyAmountADesired = ethers.utils.parseUnits("10", 18);
+        const faultyAmountBDesired = ethers.utils.parseUnits("56", 18);
 
         const { amountA, amountB } = await router.callStatic.depositLiquidity(
           aaveERC20Token,
           daiERC20Token,
-          amountADesired,
-          amountBDesired,
+          faultyAmountADesired,
+          faultyAmountBDesired,
           amountAMin,
-          amountBMin
+          amountBMin,
+          liquidityProvider.address
         );
+
+        const formattedAmountA = ethers.utils.formatUnits(amountA);
+        const formattedAmountB = ethers.utils.formatUnits(amountB);
+        const formattedAmountADesired =
+          ethers.utils.formatUnits(amountADesired);
+        const formattedAmountBDesired =
+          ethers.utils.formatUnits(amountBDesired);
+
+        expect(formattedAmountA).to.equal(formattedAmountADesired);
+        expect(formattedAmountB).to.equal(formattedAmountBDesired);
       });
     });
   });
