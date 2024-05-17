@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Volumes/extreme/Projects/Solidity/Defi-Bootcamp/contracts/periphery/Router.sol": {
-      "lastModificationDate": 1715663697773,
-      "contentHash": "96350881a4b7a843c024db9bb8bf7e68",
+      "lastModificationDate": 1715954460420,
+      "contentHash": "07c1bd6ba371abbb07bfe9ac5ed2f24a",
       "sourceName": "contracts/periphery/Router.sol",
       "solcConfig": {
         "version": "0.8.17",
@@ -31,7 +31,10 @@
       "imports": [
         "./interfaces/IRouter.sol",
         "../core/interfaces/IFactory.sol",
-        "./libraries/DEXLibrary.sol"
+        "./libraries/DEXLibrary.sol",
+        "./libraries/TransferHelper.sol",
+        "../core/interfaces/ITradingPairExchange.sol",
+        "hardhat/console.sol"
       ],
       "versionPragmas": [
         "=0.8.17"
@@ -41,8 +44,8 @@
       ]
     },
     "/Volumes/extreme/Projects/Solidity/Defi-Bootcamp/contracts/periphery/interfaces/IRouter.sol": {
-      "lastModificationDate": 1715566580563,
-      "contentHash": "8dc27b4763361427b790c3d5c55c2fc7",
+      "lastModificationDate": 1715790384256,
+      "contentHash": "18c2b8c802954f7606235bce67b24133",
       "sourceName": "contracts/periphery/interfaces/IRouter.sol",
       "solcConfig": {
         "version": "0.8.17",
@@ -150,8 +153,8 @@
       ]
     },
     "/Volumes/extreme/Projects/Solidity/Defi-Bootcamp/contracts/core/TradingPairExchange.sol": {
-      "lastModificationDate": 1715663535497,
-      "contentHash": "a190708540e1adf32cd2416c3c6ef229",
+      "lastModificationDate": 1715790263733,
+      "contentHash": "e8acbcfaa189079d327d493a04cc6b49",
       "sourceName": "contracts/core/TradingPairExchange.sol",
       "solcConfig": {
         "version": "0.8.17",
@@ -177,7 +180,8 @@
         }
       },
       "imports": [
-        "./interfaces/ITradingPairExchange.sol"
+        "./interfaces/ITradingPairExchange.sol",
+        "./interfaces/IERC20.sol"
       ],
       "versionPragmas": [
         "=0.8.17"
@@ -187,8 +191,8 @@
       ]
     },
     "/Volumes/extreme/Projects/Solidity/Defi-Bootcamp/contracts/core/interfaces/ITradingPairExchange.sol": {
-      "lastModificationDate": 1715663563323,
-      "contentHash": "990260a17cb4e49e314b06d6d9eda0fb",
+      "lastModificationDate": 1715789987396,
+      "contentHash": "8e2102d15ac0ea64e3c0103e3ab9dfa5",
       "sourceName": "contracts/core/interfaces/ITradingPairExchange.sol",
       "solcConfig": {
         "version": "0.8.17",
@@ -222,8 +226,8 @@
       ]
     },
     "/Volumes/extreme/Projects/Solidity/Defi-Bootcamp/contracts/periphery/libraries/DEXLibrary.sol": {
-      "lastModificationDate": 1715663850685,
-      "contentHash": "e1e0cc639c9863775eca9f510b3685ce",
+      "lastModificationDate": 1715953591669,
+      "contentHash": "45eb3c7f97b75999cac5381d272f7aa0",
       "sourceName": "contracts/periphery/libraries/DEXLibrary.sol",
       "solcConfig": {
         "version": "0.8.17",
@@ -250,13 +254,157 @@
       },
       "imports": [
         "../../core/interfaces/ITradingPairExchange.sol",
-        "../../core/TradingPairExchange.sol"
+        "../../core/TradingPairExchange.sol",
+        "hardhat/console.sol"
       ],
       "versionPragmas": [
         "=0.8.17"
       ],
       "artifacts": [
         "DEXLibrary"
+      ]
+    },
+    "/Volumes/extreme/Projects/Solidity/Defi-Bootcamp/contracts/core/interfaces/IERC20.sol": {
+      "lastModificationDate": 1715787432803,
+      "contentHash": "10a11b126e911fc0e85b03ca0cc1582b",
+      "sourceName": "contracts/core/interfaces/IERC20.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "=0.8.17"
+      ],
+      "artifacts": [
+        "IERC20"
+      ]
+    },
+    "/Volumes/extreme/Projects/Solidity/Defi-Bootcamp/contracts/periphery/libraries/TransferHelper.sol": {
+      "lastModificationDate": 1715783543980,
+      "contentHash": "cf830115765f9013fba9c800af8a47df",
+      "sourceName": "contracts/periphery/libraries/TransferHelper.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "=0.8.17"
+      ],
+      "artifacts": [
+        "TransferHelper"
+      ]
+    },
+    "/Volumes/extreme/Projects/Solidity/Defi-Bootcamp/node_modules/hardhat/console.sol": {
+      "lastModificationDate": 1715561920857,
+      "contentHash": "4ff3cd2f6272c9a6516e9ee4f2b967d3",
+      "sourceName": "hardhat/console.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">= 0.4.22 <0.9.0"
+      ],
+      "artifacts": [
+        "console"
+      ]
+    },
+    "/Volumes/extreme/Projects/Solidity/Defi-Bootcamp/test/mocks/ERC20Basic.sol": {
+      "lastModificationDate": 1715869279608,
+      "contentHash": "5cc99efb547084e8b03a7f08e21429a1",
+      "sourceName": "test/mocks/ERC20Basic.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "hardhat/console.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.17"
+      ],
+      "artifacts": [
+        "ERC20Basic",
+        "IERC20"
       ]
     }
   }

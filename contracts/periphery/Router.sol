@@ -6,6 +6,7 @@ import "../core/interfaces/IFactory.sol";
 import "./libraries/DEXLibrary.sol";
 import "./libraries/TransferHelper.sol";
 import "../core/interfaces/ITradingPairExchange.sol";
+import "hardhat/console.sol";
 
 contract Router is IRouter {
     address public immutable factoryAddr;
@@ -44,6 +45,10 @@ contract Router is IRouter {
         }
 
         (uint256 reserveA, uint256 reserveB) = DEXLibrary.getReserves(factoryAddr, tokenA, tokenB);
+
+        // console.log("---------------------------------");
+        // console.log(" reserveA ", reserveA);
+        // console.log(" reserveB ", reserveB);
 
         if (reserveA == 0 && reserveB == 0) {
             (amountA, amountB) = (amountADesired, amountBDesired);
