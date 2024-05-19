@@ -229,8 +229,8 @@
       ]
     },
     "/Volumes/extreme/Projects/Solidity/Defi-Bootcamp/contracts/periphery/libraries/DEXLibrary.sol": {
-      "lastModificationDate": 1716003944491,
-      "contentHash": "97de3da435ae68df61093d39f94a2509",
+      "lastModificationDate": 1716101474558,
+      "contentHash": "b1ecb6d135e1671bf3092dd9dc484822",
       "sourceName": "contracts/periphery/libraries/DEXLibrary.sol",
       "solcConfig": {
         "version": "0.8.17",
