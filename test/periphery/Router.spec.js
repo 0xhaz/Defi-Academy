@@ -1,6 +1,8 @@
 const { expect } = require("chai");
 const { loadFixture } = require("@nomicfoundation/hardhat-network-helpers");
 const { ethers } = require("hardhat");
+const { bigNumberSqrt } = require("../helpers/math-helpers.js");
+const BigNumber = require("bignumber.js");
 
 describe("Router contract", () => {
   async function deployRouterFixture() {
@@ -157,7 +159,7 @@ describe("Router contract", () => {
       });
     });
 
-    describe("Should mint the correct number of liquidity tokens", () => {
+    describe("Should mint the correct number of Liquidity Tokens", () => {
       it("for a new liquidity pool", async () => {
         const {
           aaveToken,
@@ -170,7 +172,38 @@ describe("Router contract", () => {
           liquidityProvider,
         } = await loadFixture(deployRouterFixture);
 
-        const { amountA, amountB } = await router.callStatic.depositLiquidity(
+        const { amountA, amountB, liquidity } =
+          await router.callStatic.depositLiquidity(
+            aaveToken.address,
+            daiToken.address,
+            amountADesired,
+            amountBDesired,
+            amountAMin,
+            amountBMin,
+            liquidityProvider.address
+          );
+
+        console.log("Liquidity of new pool: ", liquidity.toString());
+        const MINIMUM_LIQUIDITY = 10 ** 3; // 1000 liquidity tokens
+        const geometricMean = bigNumberSqrt(amountA.mul(amountB)).sub(
+          MINIMUM_LIQUIDITY
+        ); // Calculate the geometric mean of amountA and amountB
+        expect(liquidity).to.equal(geometricMean);
+      });
+
+      it("for an existing liquidity pool", async () => {
+        const {
+          aaveToken,
+          daiToken,
+          amountADesired,
+          amountBDesired,
+          amountAMin,
+          amountBMin,
+          router,
+          liquidityProvider,
+        } = await loadFixture(deployRouterFixture);
+
+        await router.depositLiquidity(
           aaveToken.address,
           daiToken.address,
           amountADesired,
@@ -180,8 +213,46 @@ describe("Router contract", () => {
           liquidityProvider.address
         );
 
-        const geometricMean = null; // Calculate the geometric mean of amountA and amountB
-        expect(liquidity).to.equal(geometricMean);
+        const { amountA, amountB, liquidity } =
+          await router.callStatic.depositLiquidity(
+            aaveToken.address,
+            daiToken.address,
+            amountADesired,
+            amountBDesired,
+            amountAMin,
+            amountBMin,
+            liquidityProvider.address
+          );
+
+        console.log(
+          "Liquidity of updated existing pool: ",
+          liquidity.toString()
+        );
+
+        //  Math.sqrt(amount0 * amount1) - MINIMUM_LIQUIDITY
+        const totalSupply = ethers.BigNumber.from("7483314773547882771");
+        const reserveA = amountADesired;
+        const reserveB = amountBDesired;
+
+        // liquidity = Math.min(amountA * _totalSupply) / reserveA, (amountB * _totalSupply / reserveB)
+        const tokenAPercentageIncrease = amountA.mul(totalSupply).div(reserveA);
+        const tokenBPercentageIncrease = amountB.mul(totalSupply).div(reserveB);
+
+        const bnTokenAPercentIncrease = new BigNumber(
+          ethers.utils.formatUnits(tokenAPercentageIncrease)
+        );
+        const bnTokenBPercentIncrease = new BigNumber(
+          ethers.utils.formatUnits(tokenBPercentageIncrease)
+        );
+        const minimum = BigNumber.min(
+          bnTokenAPercentIncrease,
+          bnTokenBPercentIncrease
+        );
+
+        const formattedMinimum = minimum.toFormat();
+        const formattedLiquidity = ethers.utils.formatUnits(liquidity);
+
+        expect(formattedLiquidity).to.equal(formattedMinimum);
       });
     });
   });

@@ -3,8 +3,13 @@ pragma solidity =0.8.17;
 
 import "./interfaces/ITradingPairExchange.sol";
 import "./interfaces/IERC20.sol";
+import "./LiquidityTokenERC20.sol";
+import "./libraries/Math.sol";
+import "hardhat/console.sol";
 
-contract TradingPairExchange is ITradingPairExchange {
+contract TradingPairExchange is ITradingPairExchange, LiquidityTokenERC20 {
+    uint256 public constant MINIMUM_LIQUIDITY = 10 ** 3;
+
     address public factoryAddr;
     address public tokenA;
     address public tokenB;
@@ -49,6 +54,18 @@ contract TradingPairExchange is ITradingPairExchange {
         uint256 amount0 = balance0 - _reserve0;
         uint256 amount1 = balance1 - _reserve1;
 
+        uint256 _totalSupply = totalSupply; // gas savings
+        if (_totalSupply == 0) {
+            liquidity = Math.sqrt(amount0 * amount1) - MINIMUM_LIQUIDITY; // Geometric Mean of amount0 and amount1
+            _mint(address(0), MINIMUM_LIQUIDITY);
+        } else {
+            liquidity = Math.min((amount0 * _totalSupply) / reserve0, (amount1 * _totalSupply) / reserve1);
+            // console.log("liquidity min ", liquidity);
+        }
+
+        require(liquidity > 0, "DEX: INSUFFICIENT_LIQUIDITY_MINTED");
+
+        _mint(to, liquidity);
         _update(balance0, balance1);
         emit Mint(msg.sender, amount0, amount1);
     }

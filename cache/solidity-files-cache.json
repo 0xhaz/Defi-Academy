@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Volumes/extreme/Projects/Solidity/Defi-Bootcamp/contracts/periphery/Router.sol": {
-      "lastModificationDate": 1715954460420,
-      "contentHash": "07c1bd6ba371abbb07bfe9ac5ed2f24a",
+      "lastModificationDate": 1715954478234,
+      "contentHash": "fb488c7fe752e47bc47bfc558ce1f571",
       "sourceName": "contracts/periphery/Router.sol",
       "solcConfig": {
         "version": "0.8.17",
@@ -153,8 +153,8 @@
       ]
     },
     "/Volumes/extreme/Projects/Solidity/Defi-Bootcamp/contracts/core/TradingPairExchange.sol": {
-      "lastModificationDate": 1715790263733,
-      "contentHash": "e8acbcfaa189079d327d493a04cc6b49",
+      "lastModificationDate": 1716005087195,
+      "contentHash": "a65c77000c98eec82cc2de0dafb19987",
       "sourceName": "contracts/core/TradingPairExchange.sol",
       "solcConfig": {
         "version": "0.8.17",
@@ -181,7 +181,10 @@
       },
       "imports": [
         "./interfaces/ITradingPairExchange.sol",
-        "./interfaces/IERC20.sol"
+        "./interfaces/IERC20.sol",
+        "./LiquidityTokenERC20.sol",
+        "./libraries/Math.sol",
+        "hardhat/console.sol"
       ],
       "versionPragmas": [
         "=0.8.17"
@@ -226,8 +229,8 @@
       ]
     },
     "/Volumes/extreme/Projects/Solidity/Defi-Bootcamp/contracts/periphery/libraries/DEXLibrary.sol": {
-      "lastModificationDate": 1715953591669,
-      "contentHash": "45eb3c7f97b75999cac5381d272f7aa0",
+      "lastModificationDate": 1716003944491,
+      "contentHash": "97de3da435ae68df61093d39f94a2509",
       "sourceName": "contracts/periphery/libraries/DEXLibrary.sol",
       "solcConfig": {
         "version": "0.8.17",
@@ -265,8 +268,8 @@
       ]
     },
     "/Volumes/extreme/Projects/Solidity/Defi-Bootcamp/contracts/core/interfaces/IERC20.sol": {
-      "lastModificationDate": 1715787432803,
-      "contentHash": "10a11b126e911fc0e85b03ca0cc1582b",
+      "lastModificationDate": 1715993617505,
+      "contentHash": "59f7311cc33b043762e4533372d6d310",
       "sourceName": "contracts/core/interfaces/IERC20.sol",
       "solcConfig": {
         "version": "0.8.17",
@@ -405,6 +408,78 @@
       "artifacts": [
         "ERC20Basic",
         "IERC20"
+      ]
+    },
+    "/Volumes/extreme/Projects/Solidity/Defi-Bootcamp/contracts/core/LiquidityTokenERC20.sol": {
+      "lastModificationDate": 1715993605602,
+      "contentHash": "3aa7281869e5b0ce72b03c9bf423eb33",
+      "sourceName": "contracts/core/LiquidityTokenERC20.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./interfaces/IERC20.sol"
+      ],
+      "versionPragmas": [
+        "=0.8.17"
+      ],
+      "artifacts": [
+        "LiquidityTokenERC20"
+      ]
+    },
+    "/Volumes/extreme/Projects/Solidity/Defi-Bootcamp/contracts/core/libraries/Math.sol": {
+      "lastModificationDate": 1715993723671,
+      "contentHash": "4c1cf9e57aa0a43bb7cdb92309850b96",
+      "sourceName": "contracts/core/libraries/Math.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "=0.8.17"
+      ],
+      "artifacts": [
+        "Math"
       ]
     }
   }
