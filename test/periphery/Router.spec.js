@@ -183,7 +183,7 @@ describe("Router contract", () => {
             liquidityProvider.address
           );
 
-        console.log("Liquidity of new pool: ", liquidity.toString());
+        // console.log("Liquidity of new pool: ", liquidity.toString());
         const MINIMUM_LIQUIDITY = 10 ** 3; // 1000 liquidity tokens
         const geometricMean = bigNumberSqrt(amountA.mul(amountB)).sub(
           MINIMUM_LIQUIDITY
@@ -224,10 +224,10 @@ describe("Router contract", () => {
             liquidityProvider.address
           );
 
-        console.log(
-          "Liquidity of updated existing pool: ",
-          liquidity.toString()
-        );
+        // console.log(
+        //   "Liquidity of updated existing pool: ",
+        //   liquidity.toString()
+        // );
 
         //  Math.sqrt(amount0 * amount1) - MINIMUM_LIQUIDITY
         const totalSupply = ethers.BigNumber.from("7483314773547882771");

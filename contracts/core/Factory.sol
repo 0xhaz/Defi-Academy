@@ -7,6 +7,7 @@ import "./interfaces/ITradingPairExchange.sol";
 
 contract Factory is IFactory {
     address public feeToSetter;
+    address public feeTo;
 
     mapping(address => mapping(address => address)) public getTradingPair;
     address[] public allTradingPairs;
@@ -33,5 +34,10 @@ contract Factory is IFactory {
         allTradingPairs.push(pair);
 
         emit TradingPairCreated(tokenA, tokenB, pair, allTradingPairs.length);
+    }
+
+    function setFeeTo(address _feeTo) external {
+        require(msg.sender == feeToSetter, "DEX: FORBIDDEN_TO_SET_PROTOCOL_FEES");
+        feeTo = _feeTo;
     }
 }
