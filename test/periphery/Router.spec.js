@@ -64,6 +64,10 @@ describe("Router contract", () => {
       .connect(liquidityProvider)
       .approve(router.address, ethers.utils.parseUnits("130", 18));
 
+    //   Transaction deadline of 20 minutes
+    const currentTime = Math.floor(Date.now() / 1000); // divide by 1000 to convert to seconds
+    const deadline = currentTime + 20 * 60; // 20 minutes
+
     return {
       aaveToken,
       daiToken,
@@ -73,6 +77,7 @@ describe("Router contract", () => {
       amountBMin,
       router,
       liquidityProvider,
+      deadline,
     };
   }
 
@@ -88,6 +93,7 @@ describe("Router contract", () => {
           amountBMin,
           router,
           liquidityProvider,
+          deadline,
         } = await loadFixture(deployRouterFixture);
 
         const { amountA, amountB } = await router.callStatic.depositLiquidity(
@@ -97,7 +103,8 @@ describe("Router contract", () => {
           amountBDesired,
           amountAMin,
           amountBMin,
-          liquidityProvider.address
+          liquidityProvider.address,
+          deadline
         );
 
         const formattedAmountA = ethers.utils.formatUnits(amountA);
@@ -122,6 +129,7 @@ describe("Router contract", () => {
           amountBMin,
           router,
           liquidityProvider,
+          deadline,
         } = await loadFixture(deployRouterFixture);
 
         await router.depositLiquidity(
@@ -131,7 +139,8 @@ describe("Router contract", () => {
           amountBDesired,
           amountAMin,
           amountBMin,
-          liquidityProvider.address
+          liquidityProvider.address,
+          deadline
         );
 
         const faultyAmountADesired = ethers.utils.parseUnits("10", 18);
@@ -144,7 +153,8 @@ describe("Router contract", () => {
           faultyAmountBDesired,
           amountAMin,
           amountBMin,
-          liquidityProvider.address
+          liquidityProvider.address,
+          deadline
         );
 
         const formattedAmountA = ethers.utils.formatUnits(amountA);
@@ -170,6 +180,7 @@ describe("Router contract", () => {
           amountBMin,
           router,
           liquidityProvider,
+          deadline,
         } = await loadFixture(deployRouterFixture);
 
         const { amountA, amountB, liquidity } =
@@ -180,7 +191,8 @@ describe("Router contract", () => {
             amountBDesired,
             amountAMin,
             amountBMin,
-            liquidityProvider.address
+            liquidityProvider.address,
+            deadline
           );
 
         // console.log("Liquidity of new pool: ", liquidity.toString());
@@ -201,6 +213,7 @@ describe("Router contract", () => {
           amountBMin,
           router,
           liquidityProvider,
+          deadline,
         } = await loadFixture(deployRouterFixture);
 
         await router.depositLiquidity(
@@ -210,7 +223,8 @@ describe("Router contract", () => {
           amountBDesired,
           amountAMin,
           amountBMin,
-          liquidityProvider.address
+          liquidityProvider.address,
+          deadline
         );
 
         const { amountA, amountB, liquidity } =
@@ -221,7 +235,8 @@ describe("Router contract", () => {
             amountBDesired,
             amountAMin,
             amountBMin,
-            liquidityProvider.address
+            liquidityProvider.address,
+            deadline
           );
 
         // console.log(

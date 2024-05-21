@@ -20,8 +20,16 @@ contract TradingPairExchange is ITradingPairExchange, LiquidityTokenERC20 {
     uint32 private blockTimestampLast;
 
     uint256 public kLast; // reserve0 * reserve1, as of immediately after the most recent liquidity event
+    uint256 private unlocked = 1;
 
     event Mint(address indexed sender, uint256 amount0, uint256 amount1);
+
+    modifier lock() {
+        require(unlocked == 1, "DEX: LOCKED");
+        unlocked = 0;
+        _;
+        unlocked = 1;
+    }
 
     constructor() {
         factoryAddr = msg.sender;
@@ -76,7 +84,7 @@ contract TradingPairExchange is ITradingPairExchange, LiquidityTokenERC20 {
         }
     }
 
-    function mint(address to) external returns (uint256 liquidity) {
+    function mint(address to) external lock returns (uint256 liquidity) {
         (uint112 _reserve0, uint112 _reserve1,) = getReserves();
         uint256 balance0 = IERC20(tokenA).balanceOf(address(this));
         uint256 balance1 = IERC20(tokenB).balanceOf(address(this));

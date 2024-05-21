@@ -15,6 +15,11 @@ contract Router is IRouter {
         factoryAddr = _factoryAddr;
     }
 
+    modifier ensure(uint256 deadline) {
+        require(deadline >= block.timestamp, "Router: EXPIRED");
+        _;
+    }
+
     function depositLiquidity(
         address tokenA,
         address tokenB,
@@ -22,8 +27,9 @@ contract Router is IRouter {
         uint256 amountBDesired,
         uint256 amountAMin,
         uint256 amountBMin,
-        address to
-    ) external returns (uint256 amountA, uint256 amountB, uint256 liquidity) {
+        address to,
+        uint256 deadline
+    ) external ensure(deadline) returns (uint256 amountA, uint256 amountB, uint256 liquidity) {
         (amountA, amountB) = _depositLiquidity(tokenA, tokenB, amountADesired, amountBDesired, amountAMin, amountBMin);
 
         address pair = DEXLibrary.pairFor(factoryAddr, tokenA, tokenB);
