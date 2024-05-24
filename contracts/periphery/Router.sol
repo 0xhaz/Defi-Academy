@@ -6,6 +6,7 @@ import "../core/interfaces/IFactory.sol";
 import "./libraries/DEXLibrary.sol";
 import "./libraries/TransferHelper.sol";
 import "../core/interfaces/ITradingPairExchange.sol";
+
 import "hardhat/console.sol";
 
 contract Router is IRouter {
@@ -70,5 +71,23 @@ contract Router is IRouter {
                 (amountA, amountB) = (amountAOptimal, amountBDesired);
             }
         }
+    }
+
+    function withdrawLiquidity(
+        address tokenA,
+        address tokenB,
+        uint256 liquidity,
+        uint256 amountAMin,
+        uint256 amountBMin,
+        address to,
+        uint256 deadline
+    ) external ensure(deadline) returns (uint256 amountA, uint256 amountB) {
+        address pair = DEXLibrary.pairFor(factoryAddr, tokenA, tokenB);
+        ITradingPairExchange(pair).transferFrom(msg.sender, pair, liquidity);
+        (uint256 amountASent, uint256 amountBSent) = ITradingPairExchange(pair).burn(to);
+        (address token0,) = DEXLibrary.sortTokens(tokenA, tokenB);
+        (amountA, amountB) = tokenA == token0 ? (amountASent, amountBSent) : (amountBSent, amountASent);
+        require(amountA >= amountAMin, "DEX: INSUFFICIENT_A_AMOUNT");
+        require(amountB >= amountBMin, "DEX: INSUFFICIENT_B_AMOUNT");
     }
 }

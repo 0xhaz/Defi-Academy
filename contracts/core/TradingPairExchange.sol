@@ -6,7 +6,7 @@ import "./interfaces/IERC20.sol";
 import "./LiquidityTokenERC20.sol";
 import "./libraries/Math.sol";
 import "./interfaces/IFactory.sol";
-// import "hardhat/console.sol";
+import "hardhat/console.sol";
 
 contract TradingPairExchange is ITradingPairExchange, LiquidityTokenERC20 {
     uint256 public constant MINIMUM_LIQUIDITY = 10 ** 3;
@@ -96,6 +96,7 @@ contract TradingPairExchange is ITradingPairExchange, LiquidityTokenERC20 {
         uint256 _totalSupply = totalSupply; // gas savings
         if (_totalSupply == 0) {
             liquidity = Math.sqrt(amount0 * amount1) - MINIMUM_LIQUIDITY; // Geometric Mean of amount0 and amount1
+            // console.log("---- liquidity tokens minted ----", liquidity);
             _mint(address(0), MINIMUM_LIQUIDITY);
         } else {
             liquidity = Math.min((amount0 * _totalSupply) / reserve0, (amount1 * _totalSupply) / reserve1);
@@ -110,5 +111,27 @@ contract TradingPairExchange is ITradingPairExchange, LiquidityTokenERC20 {
         if (feeOn) kLast = Math.mul(_reserve0, _reserve1); // reserve0 and reserve1 are up-to-date
 
         emit Mint(msg.sender, amount0, amount1);
+    }
+
+    function burn(address to) external lock returns (uint256 amountASent, uint256 amountBSent) {
+        (uint112 _reserve0, uint112 _reserve1,) = getReserves();
+        address _token0 = tokenA;
+        address _token1 = tokenB;
+        uint256 balance0 = IERC20(_token0).balanceOf(address(this));
+        uint256 balance1 = IERC20(_token1).balanceOf(address(this));
+        uint256 liquidity = balanceOf[address(this)];
+
+        bool feeOn = _mintFee(_reserve0, _reserve1);
+        uint256 _totalSupply = totalSupply; // cache variable for gas savings
+        amountASent = (liquidity * balance0) / _totalSupply; // using balance0 and balance1 ensures the ratio is preserved
+    }
+
+    function transferFrom(address from, address to, uint256 value)
+        public
+        override(ITradingPairExchange, LiquidityTokenERC20)
+        returns (bool)
+    {
+        (bool transferSuccess) = super.transferFrom(from, to, value);
+        return transferSuccess;
     }
 }

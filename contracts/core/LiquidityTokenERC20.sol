@@ -11,8 +11,6 @@ contract LiquidityTokenERC20 is IERC20 {
     mapping(address => uint256) public balanceOf;
     mapping(address => mapping(address => uint256)) public allowance;
 
-   
-
     function _mint(address to, uint256 value) internal {
         totalSupply = totalSupply + value;
         balanceOf[to] = balanceOf[to] + value;
@@ -46,7 +44,7 @@ contract LiquidityTokenERC20 is IERC20 {
         return true;
     }
 
-    function transferFrom(address from, address to, uint256 value) external returns (bool) {
+    function transferFrom(address from, address to, uint256 value) public virtual returns (bool) {
         if (allowance[from][msg.sender] != type(uint256).max) {
             allowance[from][msg.sender] = allowance[from][msg.sender] - value;
         }
