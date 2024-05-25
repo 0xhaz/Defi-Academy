@@ -230,4 +230,10 @@ describe("TradingPairExchange contract", () => {
       );
     });
   });
+
+  describe("Burning Liquidity Tokens", () => {
+    it("should debit a Liquidity Provider's account after burning liquidity tokens", async () => {});
+
+    it("should send Liquidity Provider ERC20 tokens proportional to amonut of Liquidity Tokens burned", async () => {});
+  });
 });

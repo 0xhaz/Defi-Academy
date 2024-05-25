@@ -10,6 +10,7 @@ import "hardhat/console.sol";
 
 contract TradingPairExchange is ITradingPairExchange, LiquidityTokenERC20 {
     uint256 public constant MINIMUM_LIQUIDITY = 10 ** 3;
+    bytes4 private constant SELECTOR = bytes4(keccak256(bytes("transfer(address,uint256)")));
 
     address public factoryAddr;
     address public tokenA;
@@ -22,7 +23,9 @@ contract TradingPairExchange is ITradingPairExchange, LiquidityTokenERC20 {
     uint256 public kLast; // reserve0 * reserve1, as of immediately after the most recent liquidity event
     uint256 private unlocked = 1;
 
+    // event can be save in interface
     event Mint(address indexed sender, uint256 amount0, uint256 amount1);
+    event Burn(address indexed sender, uint256 amount0, uint256 amount1, address indexed to);
 
     modifier lock() {
         require(unlocked == 1, "DEX: LOCKED");
@@ -46,6 +49,11 @@ contract TradingPairExchange is ITradingPairExchange, LiquidityTokenERC20 {
         _reserve0 = reserve0;
         _reserve1 = reserve1;
         _blockTimestampLast = blockTimestampLast;
+    }
+
+    function _safeTransfer(address token, address to, uint256 value) private {
+        (bool success, bytes memory data) = token.call(abi.encodeWithSelector(SELECTOR, to, value));
+        require(success && (data.length == 0 || abi.decode(data, (bool))), "DEX: TRANSFER_FAILED");
     }
 
     function _update(uint256 balance0, uint256 balance1) internal {
@@ -124,6 +132,19 @@ contract TradingPairExchange is ITradingPairExchange, LiquidityTokenERC20 {
         bool feeOn = _mintFee(_reserve0, _reserve1);
         uint256 _totalSupply = totalSupply; // cache variable for gas savings
         amountASent = (liquidity * balance0) / _totalSupply; // using balance0 and balance1 ensures the ratio is preserved
+        amountBSent = (liquidity * balance1) / _totalSupply;
+        require(amountASent > 0 && amountBSent > 0, "DEX: INSUFFICIENT_LIQUIDITY_BURNED");
+
+        _burn(address(this), liquidity);
+        _safeTransfer(_token0, to, amountASent);
+        _safeTransfer(_token1, to, amountBSent);
+
+        balance0 = IERC20(_token0).balanceOf(address(this));
+        balance1 = IERC20(_token1).balanceOf(address(this));
+        _update(balance0, balance1);
+
+        if (feeOn) kLast = uint256(reserve0 * reserve1); // reserve0 and reserve1 are up-to-date
+        emit Burn(msg.sender, amountASent, amountBSent, to);
     }
 
     function transferFrom(address from, address to, uint256 value)
