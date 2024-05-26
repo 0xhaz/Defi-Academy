@@ -336,6 +336,7 @@ describe("Router contract", () => {
       );
       const receipt = await tradingPairExchangeContract.wait();
 
+      // Get a handle on an instance of TradingPairExchange contract
       const tradingPairExchangeAddress = receipt.events[0].args[2];
 
       const tradingPairExchange = await ethers.getContractAt(
@@ -353,6 +354,18 @@ describe("Router contract", () => {
       const currentTime = Math.floor(Date.now() / 1000); // divide by 1000 to convert to seconds
       const deadline = currentTime + 20 * 60; // 20 minutes
 
+      // Initialize a new liquidity pool
+      await router.depositLiquidity(
+        aaveToken.address,
+        daiToken.address,
+        amountADesired,
+        amountBDesired,
+        amountAMin,
+        amountBMin,
+        liquidityProvider.address,
+        deadline
+      );
+
       return {
         aaveToken,
         daiToken,
@@ -367,18 +380,8 @@ describe("Router contract", () => {
       };
     }
     it("should withdraw the correct number of ERC20 tokens", async () => {
-      const {
-        aaveToken,
-        daiToken,
-        amountADesired,
-        amountBDesired,
-        amountAMin,
-        amountBMin,
-        router,
-        liquidityProvider,
-        deadline,
-        tradingPairExchange,
-      } = await loadFixture(deploySecondRouterFixture);
+      const { aaveToken, daiToken, router, liquidityProvider, deadline } =
+        await loadFixture(deploySecondRouterFixture);
 
       const liquidityTokensToBurn = ethers.utils.parseUnits("4", 18);
       const minAmountAToReturn = ethers.utils.parseUnits("0.5", 18);
@@ -407,10 +410,6 @@ describe("Router contract", () => {
       const {
         aaveToken,
         daiToken,
-        amountADesired,
-        amountBDesired,
-        amountAMin,
-        amountBMin,
         router,
         liquidityProvider,
         deadline,
@@ -441,7 +440,7 @@ describe("Router contract", () => {
         updatedLiquidityBalance
       );
 
-      expect(formattedUpdatedLiquidityBalance).to.equal("1");
+      expect(formattedUpdatedLiquidityBalance).to.equal("3.483314773547881771");
     });
   });
 });
