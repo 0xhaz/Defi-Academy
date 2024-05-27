@@ -91,7 +91,7 @@ describe("TradingPairExchange contract", () => {
         liquidityProvider,
         exchangeDev,
         tradingPairExchange,
-      } = await loadFixture(deployRouterFixture);
+      } = await loadFixture(deployTradingPairexchangeFixture);
 
       await factory.setFeeTo(exchangeDev.address);
 
@@ -156,7 +156,7 @@ describe("TradingPairExchange contract", () => {
         liquidityProvider,
         exchangeDev,
         tradingPairExchange,
-      } = await loadFixture(deployRouterFixture);
+      } = await loadFixture(deployTradingPairexchangeFixture);
 
       await aaveToken.transferFrom(
         liquidityProvider.address,
@@ -190,7 +190,7 @@ describe("TradingPairExchange contract", () => {
         amountBDesired,
         liquidityProvider,
         tradingPairExchange,
-      } = await loadFixture(deployRouterFixture);
+      } = await loadFixture(deployTradingPairexchangeFixture);
 
       await aaveToken.transferFrom(
         liquidityProvider.address,
@@ -324,7 +324,7 @@ describe("TradingPairExchange contract", () => {
     }
     it("should debit a Liquidity Provider's account after burning Liquidity Tokens", async () => {
       const { deployer, liquidityProvider, tradingPairExchange } =
-        await deploySecondaryTradingPairexchangeFixture();
+        await loadFixture(deploySecondaryTradingPairexchangeFixture);
 
       // Liquidity Provider approve deployer to transfer their liquidity tokens
       await tradingPairExchange
@@ -340,10 +340,134 @@ describe("TradingPairExchange contract", () => {
 
       // Burn Liquidity Tokens
       await tradingPairExchange.burn(liquidityProvider.address);
+
+      // Format Liquidity Token balances
+      const liquidityProviderBalance = await tradingPairExchange.balanceOf(
+        liquidityProvider.address
+      );
+      const formattedLiquidityProviderBalance = ethers.utils.formatUnits(
+        liquidityProviderBalance,
+        18
+      );
+      const liquidityTokenTotalSupply = await tradingPairExchange.totalSupply();
+      const formattedLiquidityTokenTotalSupply = ethers.utils.formatUnits(
+        liquidityTokenTotalSupply,
+        18
+      );
+
+      // Expect correct debitted amount of Liquidity Tokens
+      expect(formattedLiquidityProviderBalance).to.equal(
+        "3.483314773547881771"
+      );
+      expect(formattedLiquidityTokenTotalSupply).to.equal(
+        "3.483314773547882771"
+      );
     });
 
-    it("should send Liquidity Provider ERC20 tokens proportional to amount of Liquidity Tokens burned", async () => {});
+    it("should send Liquidity Provider ERC20 tokens proportional to amount of Liquidity Tokens burned", async () => {
+      const {
+        aaveToken,
+        daiToken,
+        deployer,
+        liquidityProvider,
+        tradingPairExchange,
+      } = await loadFixture(deploySecondaryTradingPairexchangeFixture);
 
-    it("should remit payment of the Protocol Fee to the Exchange Developer account", async () => {});
+      // Liquidity Provider approve deployer to transfer their liquidity tokens
+      await tradingPairExchange
+        .connect(liquidityProvider)
+        .approve(
+          deployer.address,
+          ethers.utils.parseUnits("7.483314773547881771", 18)
+        );
+
+      // Transfer Liquidity Tokens to TradingPairExchange
+      await tradingPairExchange.transferFrom(
+        liquidityProvider.address,
+        tradingPairExchange.address,
+        ethers.utils.parseUnits("7.483314773547881771", 18)
+      );
+
+      // Burn Liquidity Tokens
+      await tradingPairExchange.burn(liquidityProvider.address);
+
+      // Format Liquidity Token balances
+      const amountAReturned = await aaveToken.balanceOf(
+        liquidityProvider.address
+      );
+      const amountBReturned = await daiToken.balanceOf(
+        liquidityProvider.address
+      );
+      const formattedAaveTokensCredited = ethers.utils.formatUnits(
+        amountAReturned,
+        18
+      );
+      const formattedDaiTokensCredited = ethers.utils.formatUnits(
+        amountBReturned,
+        18
+      );
+
+      // Expect Liquidity Provider to now have additional AAVE and DAI tokens in their account
+      expect(formattedAaveTokensCredited).to.equal("129.999999999999999866");
+      expect(formattedDaiTokensCredited).to.equal("129.999999999999992516");
+    });
+
+    it("should remit payment of the Protocol Fee to the Exchange Developer account", async () => {
+      const {
+        aaveToken,
+        daiToken,
+        deployer,
+        liquidityProvider,
+        exchangeDev,
+        tradingPairExchange,
+        factory,
+      } = await loadFixture(deploySecondaryTradingPairexchangeFixture);
+
+      // Set Protocol Fee recipient to Developer account
+      await factory.setFeeTo(exchangeDev.address);
+
+      // Deposit of liquidity into AAVE/DAI pool
+      await aaveToken.transferFrom(
+        liquidityProvider.address,
+        tradingPairExchange.address,
+        ethers.utils.parseUnits(".25", 18)
+      );
+
+      await daiToken.transferFrom(
+        liquidityProvider.address,
+        tradingPairExchange.address,
+        ethers.utils.parseUnits("14", 18)
+      );
+
+      // Mint relevant amount of Liquidity Tokens
+      await tradingPairExchange.mint(liquidityProvider.address);
+
+      // Liquidity Provider approve deployer to transfer their liquidity tokens
+      await tradingPairExchange
+        .connect(liquidityProvider)
+        .approve(deployer.address, ethers.utils.parseUnits("5", 18));
+
+      // Transfer Liquidity Tokens to TradingPairExchange
+      await tradingPairExchange.transferFrom(
+        liquidityProvider.address,
+        tradingPairExchange.address,
+        ethers.utils.parseUnits("4", 18)
+      );
+
+      // Burn Liquidity Tokens
+      await tradingPairExchange.burn(liquidityProvider.address);
+
+      // Expectation
+      const devDeveloperAccountBalance = await tradingPairExchange.balanceOf(
+        exchangeDev.address
+      );
+      const formattedDexDeveloperAccountBalance = ethers.utils.formatUnits(
+        devDeveloperAccountBalance,
+        18
+      );
+      expect(formattedDexDeveloperAccountBalance).to.equal(
+        "0.322556671273615636"
+      );
+    });
   });
 });

@@ -153,8 +153,8 @@
       ]
     },
     "/Volumes/extreme/Projects/Solidity/Defi-Bootcamp/contracts/core/TradingPairExchange.sol": {
-      "lastModificationDate": 1716560663924,
-      "contentHash": "298419456cdbaf5ae94c636385e37055",
+      "lastModificationDate": 1716844313163,
+      "contentHash": "3d5edb1c21ec2df246bcbb990a4bf337",
       "sourceName": "contracts/core/TradingPairExchange.sol",
       "solcConfig": {
         "version": "0.8.17",

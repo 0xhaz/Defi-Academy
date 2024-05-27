@@ -143,7 +143,7 @@ contract TradingPairExchange is ITradingPairExchange, LiquidityTokenERC20 {
         balance1 = IERC20(_token1).balanceOf(address(this));
         _update(balance0, balance1);
 
-        if (feeOn) kLast = uint256(reserve0 * reserve1); // reserve0 and reserve1 are up-to-date
+        if (feeOn) kLast = Math.mul(reserve0, reserve1); // reserve0 and reserve1 are up-to-date
         emit Burn(msg.sender, amountASent, amountBSent, to);
     }
 
