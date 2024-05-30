@@ -152,9 +152,7 @@ describe("TradingPairExchange contract", () => {
         daiToken,
         amountADesired,
         amountBDesired,
-        factory,
         liquidityProvider,
-        exchangeDev,
         tradingPairExchange,
       } = await loadFixture(deployTradingPairexchangeFixture);
 
