@@ -103,7 +103,7 @@ contract TradingPairExchange is ITradingPairExchange, LiquidityTokenERC20 {
 
         uint256 _totalSupply = totalSupply; // gas savings
         if (_totalSupply == 0) {
-            liquidity = Math.sqrt(amount0 * amount1) - MINIMUM_LIQUIDITY; // GeometricMean of amount0 and amount1
+            liquidity = Math.sqrt(amount0 * amount1) - MINIMUM_LIQUIDITY; // Geometric Mean of amount0 and amount1
             // console.log("---- liquidity tokens minted ----", liquidity);
             _mint(address(0), MINIMUM_LIQUIDITY);
         } else {
