@@ -203,7 +203,7 @@ describe("TradingPairExchange contract", () => {
       );
       await tradingPairExchange.mint(liquidityProvider.address);
 
-      // Transfer tokens from liquidity provider account to AAVE/DAI pool
+      // Transfer tokens from liquidity provider account to AAVE/DAI pool.
       await aaveToken.transferFrom(
         liquidityProvider.address,
         tradingPairExchange.address,
