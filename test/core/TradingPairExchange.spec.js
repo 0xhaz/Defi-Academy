@@ -440,7 +440,7 @@ describe("TradingPairExchange contract", () => {
       // Mint relevant amount of Liquidity Tokens
       await tradingPairExchange.mint(liquidityProvider.address);
 
-      // Liquidity Provider approve deployer to transfer their liquidity tokens
+      // Liquidity Provider approve deployer to transfer their liquidity tokens.
       await tradingPairExchange
         .connect(liquidityProvider)
         .approve(deployer.address, ethers.utils.parseUnits("5", 18));
